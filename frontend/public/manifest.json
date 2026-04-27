@@ -1,0 +1,21 @@
+{
+  "name": "BOTMATE | Premium AI Agency",
+  "short_name": "BOTMATE",
+  "description": "Futuristic AI Agency & Virtual IT Company.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06090c",
+  "theme_color": "#00AFFF",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dh6ibke5w/image/upload/v1777274506/botmate-icon_t2vtig.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://res.cloudinary.com/dh6ibke5w/image/upload/v1777274506/botmate-icon_t2vtig.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
