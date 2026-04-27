@@ -1,0 +1,13 @@
+{
+  "name": "botmate-root",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "lightningcss-win32-x64-msvc": "^1.32.0",
+    "tailwindcss": "^4.2.4"
+  }
+}
