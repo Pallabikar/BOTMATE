@@ -81,10 +81,11 @@ export default function Navbar() {
         <button
           className={`hamburger ${mobileMenuOpen ? "active" : ""}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle Menu"
         >
-          <span />
-          <span />
-          <span />
+          <div className="bar1"></div>
+          <div className="bar2"></div>
+          <div className="bar3"></div>
         </button>
       </nav>
 
@@ -124,7 +125,7 @@ export default function Navbar() {
           position: fixed;
           top: 0;
           width: 100%;
-          height: 70px;
+          height: 80px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -132,6 +133,7 @@ export default function Navbar() {
           background: rgba(4, 8, 15, 0.85);
           backdrop-filter: blur(20px);
           z-index: 1000;
+          transition: height 0.3s ease;
         }
 
         /* 🔥 PROGRESS BAR */
@@ -147,15 +149,17 @@ export default function Navbar() {
         }
 
         .nav-left {
-          flex: 1;
+          display: flex;
+          align-items: center;
         }
 
         .nav-logo img {
-          height: 55px;
+          height: 50px;
+          width: auto;
+          transition: height 0.3s ease;
         }
 
         .nav-center {
-          flex: 2;
           display: flex;
           justify-content: center;
           gap: 30px;
@@ -170,9 +174,11 @@ export default function Navbar() {
           color: rgba(255, 255, 255, 0.75);
           text-decoration: none;
           font-size: 14px;
+          font-weight: 500;
           padding: 6px 10px;
           position: relative;
           transition: 0.3s;
+          letter-spacing: 0.5px;
         }
 
         /* ✨ HOVER GLOW */
@@ -193,7 +199,6 @@ export default function Navbar() {
         }
 
         .nav-right {
-          flex: 1;
           display: flex;
           justify-content: flex-end;
         }
@@ -204,7 +209,8 @@ export default function Navbar() {
           border-radius: 50px;
           color: black;
           text-decoration: none;
-          font-weight: 600;
+          font-weight: 700;
+          font-size: 14px;
           transition: 0.3s;
           box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
         }
@@ -217,9 +223,42 @@ export default function Navbar() {
         /* MOBILE */
         .hamburger {
           display: none;
+          cursor: pointer;
+          background: none;
+          border: none;
+          padding: 10px;
+          z-index: 1100;
+          flex-direction: column;
+          gap: 6px;
         }
 
-        @media (max-width: 960px) {
+        .hamburger div {
+          width: 28px;
+          height: 2px;
+          background-color: white;
+          transition: 0.4s;
+          border-radius: 2px;
+        }
+
+        .hamburger.active .bar1 {
+          transform: rotate(-45deg) translate(-6px, 6px);
+          background-color: #00e5ff;
+        }
+
+        .hamburger.active .bar2 {
+          opacity: 0;
+        }
+
+        .hamburger.active .bar3 {
+          transform: rotate(45deg) translate(-5px, -6px);
+          background-color: #00e5ff;
+        }
+
+        @media (max-width: 1024px) {
+          .navbar {
+            padding: 0 30px;
+            height: 70px;
+          }
           .nav-center,
           .nav-right {
             display: none;
@@ -227,38 +266,68 @@ export default function Navbar() {
 
           .hamburger {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+          }
+          
+          .nav-logo img {
+            height: 40px;
           }
         }
 
         .mobile-menu {
           position: fixed;
           inset: 0;
-          background: black;
+          background: rgba(4, 8, 15, 0.98);
+          backdrop-filter: blur(15px);
           display: flex;
           justify-content: center;
           align-items: center;
+          z-index: 1050;
         }
 
         .mobile-links {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 25px;
           text-align: center;
+          width: 100%;
+          padding: 40px;
         }
 
         .mobile-links a {
           color: white;
-          font-size: 22px;
+          font-size: 28px;
+          font-weight: 700;
           text-decoration: none;
+          letter-spacing: 1px;
+          transition: 0.3s;
+        }
+        
+        .mobile-links a:hover {
+          color: #00e5ff;
         }
 
         .m-cta {
           background: #00e5ff;
-          padding: 12px 30px;
+          padding: 15px 40px;
           border-radius: 50px;
           color: black !important;
+          margin-top: 20px;
+          font-size: 20px !important;
+          font-weight: 800 !important;
+          box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3);
+        }
+
+        @media (max-width: 480px) {
+          .navbar {
+            padding: 0 20px;
+            height: 60px;
+          }
+          .nav-logo img {
+            height: 35px;
+          }
+          .mobile-links a {
+            font-size: 24px;
+          }
         }
       `}</style>
     </>

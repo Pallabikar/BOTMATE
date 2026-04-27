@@ -106,8 +106,8 @@ export default function ChatBotPopup() {
                 </div>
               </div>
 
-              <button onClick={() => setIsOpen(false)}>
-                <X size={18} className="text-white/40 hover:text-white" />
+              <button onClick={() => setIsOpen(false)} className="p-2 -mr-2 hover:bg-white/10 rounded-full transition-colors">
+                <X size={20} className="text-white/60 hover:text-white" />
               </button>
             </div>
 
@@ -158,10 +158,12 @@ export default function ChatBotPopup() {
       <style jsx>{`
         .chat-container {
           width: 360px;
+          max-width: calc(100vw - 32px);
           height: 520px;
+          max-height: 70vh;
           border-radius: 24px;
           overflow: hidden;
-          background: rgba(10, 15, 25, 0.75);
+          background: rgba(10, 15, 25, 0.85);
           backdrop-filter: blur(25px);
           border: 1px solid rgba(0, 229, 255, 0.25);
           box-shadow: 0 0 30px rgba(0, 229, 255, 0.1);
@@ -180,11 +182,12 @@ export default function ChatBotPopup() {
         }
 
         .chat-header {
-          padding: 16px;
+          padding: 14px 16px;
           display: flex;
           justify-content: space-between;
           align-items: center;
           border-bottom: 1px solid rgba(255,255,255,0.05);
+          background: rgba(0,0,0,0.2);
         }
 
         .chat-body {
@@ -194,23 +197,28 @@ export default function ChatBotPopup() {
           display: flex;
           flex-direction: column;
           gap: 12px;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(0,229,255,0.2) transparent;
         }
 
         .bot-msg {
           background: rgba(255,255,255,0.05);
           padding: 10px 14px;
-          border-radius: 16px;
+          border-radius: 16px 16px 16px 4px;
           color: white;
-          max-width: 80%;
+          max-width: 85%;
+          font-size: 13px;
         }
 
         .user-msg {
           background: #00e5ff;
           color: black;
           padding: 10px 14px;
-          border-radius: 16px;
+          border-radius: 16px 16px 4px 16px;
           align-self: flex-end;
           font-weight: 600;
+          font-size: 13px;
+          box-shadow: 0 4px 12px rgba(0,229,255,0.2);
         }
 
         .msg-time {
@@ -220,8 +228,9 @@ export default function ChatBotPopup() {
         }
 
         .chat-input {
-          padding: 14px;
+          padding: 12px 14px;
           border-top: 1px solid rgba(255,255,255,0.05);
+          background: rgba(0,0,0,0.1);
         }
 
         .chat-input-box {
@@ -230,7 +239,7 @@ export default function ChatBotPopup() {
           align-items: center;
           background: rgba(255,255,255,0.05);
           border-radius: 14px;
-          padding: 10px;
+          padding: 8px 12px;
         }
 
         .chat-input-box input {
@@ -239,24 +248,63 @@ export default function ChatBotPopup() {
           border: none;
           color: white;
           outline: none;
+          font-size: 13px;
         }
 
         .chat-send {
           background: #00e5ff;
           border-radius: 10px;
-          padding: 8px;
+          padding: 6px;
           color: black;
+          transition: transform 0.2s;
+        }
+        
+        .chat-send:active {
+          transform: scale(0.9);
         }
 
         .chat-toggle {
-          width: 60px;
-          height: 60px;
-          border-radius: 16px;
+          width: 54px;
+          height: 54px;
+          border-radius: 50%;
           background: #0b0f14;
           border: 1px solid rgba(0,229,255,0.3);
           display: flex;
           align-items: center;
           justify-content: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .chat-toggle:hover {
+          transform: scale(1.1);
+          border-color: #00e5ff;
+        }
+
+        @media (max-width: 480px) {
+          .chat-container {
+            width: calc(100vw - 32px);
+            height: 380px;
+            bottom: 80px;
+            right: 16px;
+          }
+          .chat-toggle {
+            width: 50px;
+            height: 50px;
+            bottom: 16px;
+            right: 16px;
+          }
+          .chat-header {
+            padding: 12px 14px;
+          }
+          .chat-body {
+            padding: 12px;
+            gap: 10px;
+          }
+          .bot-msg, .user-msg {
+            font-size: 12px;
+            padding: 8px 12px;
+          }
         }
       `}</style>
     </div>

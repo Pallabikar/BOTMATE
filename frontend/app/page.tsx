@@ -875,6 +875,9 @@ export default function Home() {
           width: max-content;
           animation: marqueeScroll 30s linear infinite;
         }
+        @media (max-width: 600px) {
+          .marquee-track { gap: 40px; }
+        }
         .marquee-brand {
           font-size: 13px; font-weight: 700;
           color: rgba(255,255,255,0.2);
@@ -1287,11 +1290,12 @@ export default function Home() {
 
         @media (max-width: 600px) {
           .services-grid { grid-template-columns: 1fr; }
-          .stats-grid    { grid-template-columns: repeat(2, 1fr); }
+          .stats-grid    { grid-template-columns: 1fr; }
           .footer-inner  { grid-template-columns: 1fr; }
           .cta-heading   { font-size: 30px; }
           .t-quote       { font-size: 14px; }
-          .testimonial-card { padding: 28px 22px; }
+          .testimonial-card { padding: 24px 20px; }
+          .section-heading { font-size: 32px; }
         }
       `}</style>
     </main>
