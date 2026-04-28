@@ -263,7 +263,7 @@ function EnhancedPageHeader({ title, subtitle }: { title: string; subtitle: stri
           transition={{ delay: 1.5 }}
         >
           <div className="hud-line" />
-          <span className="hud-txt">EST. 2024 · MUMBAI, INDIA · AI-POWERED</span>
+          <span className="hud-txt">EST. 2024 · BHUBANESWAR, ODISHA · AI-POWERED</span>
           <div className="hud-line" />
         </motion.div>
       </div>
@@ -395,7 +395,7 @@ function StorySection() {
               </div>
               <div className="img-hud-bot">
                 <span className="img-hud-tag">AI.SCAN — 97.3%</span>
-                <span className="img-hud-tag">2024 · MUMBAI</span>
+                <span className="img-hud-tag">2024 · BHUBANESWAR</span>
               </div>
 
               {/* Crosshair */}
@@ -476,7 +476,7 @@ function StorySection() {
             <StaggerReveal stagger={0.1} delay={0.9}>
               {[
                 "Founded in 2024, BotMate emerged from a simple yet powerful idea: that artificial intelligence shouldn't just be a tool, but a core engine for business evolution.",
-                "We started as a small team of AI enthusiasts and marketing experts in Mumbai. Today, we are a premier digital marketing agency that bridges the gap between complex AI technology and real-world business results.",
+                "We started as a small team of AI enthusiasts and marketing experts in Bhubaneswar, Odisha. Today, we are a premier digital marketing agency that bridges the gap between complex AI technology and real-world business results.",
                 "\"Our mission is to empower brands with intelligent strategies that don't just keep up with the future—they create it.\""
               ].map((para, i) => (
                 <RevealItem key={i}>

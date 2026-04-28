@@ -181,7 +181,7 @@ function TrustedBy() {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ delay: 0.3 }}
       >
-        Trusted by 200+ brands worldwide
+        Trusted by 50+ brands worldwide
       </motion.p>
       <div className="marquee-wrapper">
         <div className="marquee-track">
@@ -307,7 +307,7 @@ function StatCard({ value, suffix, label }: { value: number; suffix: string; lab
 }
 
 const STATS = [
-  { value: 200, suffix: "+", label: "Clients Served" },
+  { value: 50,  suffix: "+", label: "Clients Served" },
   { value: 98,  suffix: "%", label: "Retention Rate" },
   { value: 5,   suffix: "x", label: "Avg ROI"        },
   { value: 24,  suffix: "/7", label: "Support"       },
@@ -609,24 +609,25 @@ function PricingSection() {
    TESTIMONIALS
 ───────────────────────────────────────────── */
 const TESTIMONIALS = [
-  { quote: "BotMate transformed our online presence completely. Our leads tripled in just 3 months. The team is incredibly professional and results-driven.", name: "Arjun Mehta",   company: "UrbanVibe Co.",        initials: "AM" },
-  { quote: "The AI chatbot they built for us handles 80% of our customer queries automatically. Absolute game-changer for our e-commerce store.",             name: "Priya Sharma",  company: "GlowBox India",         initials: "PS" },
-  { quote: "From SEO to paid ads, BotMate manages everything seamlessly. We're consistently hitting 5x ROAS on our campaigns now.",                          name: "Rohan Kapoor",  company: "TechNest Solutions",    initials: "RK" },
-  { quote: "Their content team is phenomenal. Our Instagram grew by 40K followers in 4 months organically. Truly best-in-class.",                            name: "Sneha Joshi",   company: "Bloom Lifestyle",       initials: "SJ" },
-  { quote: "The new website they built for us loads in under 1.5 seconds and converts at 8%. Our old site was silently costing us a fortune.",               name: "Dev Nair",      company: "FinEdge Advisors",      initials: "DN" },
+  { quote: "BotMate transformed our online presence completely. Our leads tripled in just 3 months. The team is incredibly professional and results-driven.", name: "Arjun Mehta",   company: "UrbanVibe Co.",        initials: "AM", result: "3× More Leads" },
+  { quote: "The AI chatbot they built for us handles 80% of our customer queries automatically. Absolute game-changer for our e-commerce store.",             name: "Priya Sharma",  company: "GlowBox India",        initials: "PS", result: "80% Queries Automated" },
+  { quote: "From SEO to paid ads, BotMate manages everything seamlessly. We're consistently hitting 5x ROAS on our campaigns now.",                          name: "Rohan Kapoor",  company: "TechNest Solutions",   initials: "RK", result: "5× ROAS Achieved" },
+  { quote: "Their content team is phenomenal. Our Instagram grew by 40K followers in 4 months organically. Truly best-in-class work, delivered on time.",    name: "Sneha Joshi",   company: "Bloom Lifestyle",      initials: "SJ", result: "+40K Followers" },
+  { quote: "The new website they built for us loads in under 1.5 seconds and converts at 8%. Our old site was silently costing us a fortune every month.",   name: "Dev Nair",      company: "FinEdge Advisors",     initials: "DN", result: "8% Conversion Rate" },
+  { quote: "Within 60 days of working with BotMate, our Google ranking jumped to page one for 12 competitive keywords. The ROI speaks for itself.",          name: "Kavya Menon",   company: "LegalEdge India",      initials: "KM", result: "Page 1 Google Rankings" },
 ];
 
 function TestimonialsSection() {
-  const [active, setActive] = useState(0);
-  const total = TESTIMONIALS.length;
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
+  const inView = useInView(ref, { once: true, amount: 0.1 });
   const glitchedTitle = useGlitchText("What Clients Say", inView);
-
-  useEffect(() => {
-    const t = setInterval(() => setActive((a) => (a + 1) % total), 7000);
-    return () => clearInterval(t);
-  }, [total]);
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: (i: number) => ({
+      opacity: 1, y: 0, scale: 1,
+      transition: { duration: 0.6, delay: 0.1 + i * 0.12 },
+    }),
+  };
 
   return (
     <section className="section testimonials-section" ref={ref}>
@@ -653,73 +654,476 @@ function TestimonialsSection() {
           />
         </div>
 
-        {/* Carousel */}
-        <div className="t-carousel-outer">
-          <div className="t-window">
-            <AnimatePresence mode="wait">
-              <motion.div 
-                key={active}
-                className="testimonial-card"
-                initial={{ opacity: 0, x: 50, scale: 0.95 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: -50, scale: 0.95 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+        {/* 6-card grid — all visible at once */}
+        <div className="tg-grid" style={{ perspective: "1200px" }}>
+          {TESTIMONIALS.map((t, i) => (
+            <motion.div
+              key={i}
+              className="tg-card"
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              whileHover={{ y: -10, rotateX: 4, rotateY: 4, boxShadow: "0 28px 60px rgba(0,229,255,0.15)", borderColor: "rgba(0,229,255,0.45)" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <ARBrackets size={12} color="rgba(0,229,255,0.2)" />
+              <div className="tg-scan" aria-hidden="true" />
+              {/* Stars */}
+              <div className="tg-stars">
+                {[...Array(5)].map((_, si) => (
+                  <motion.svg key={si} width="13" height="13" viewBox="0 0 24 24" fill="#00e5ff"
+                    initial={{ scale: 0, rotate: -30, opacity: 0 }}
+                    animate={inView ? { scale: 1, rotate: 0, opacity: 1 } : {}}
+                    transition={{ delay: 0.3 + i * 0.12 + si * 0.06, type: "spring", stiffness: 300 }}
+                  >
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </motion.svg>
+                ))}
+              </div>
+              {/* Quote */}
+              <motion.p className="tg-quote"
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.5 + i * 0.12 }}
+              >"{t.quote}"</motion.p>
+              {/* Result badge */}
+              <motion.div className="tg-result"
+                initial={{ opacity: 0, scale: 0.8, x: -10 }}
+                animate={inView ? { opacity: 1, scale: 1, x: 0 } : {}}
+                transition={{ delay: 0.65 + i * 0.12, type: "spring" }}
               >
-                <ARBrackets size={24} color="rgba(0,229,255,0.15)" />
-                <div className="t-stars">
-                  {[...Array(5)].map((_, si) => (
-                    <motion.svg 
-                      key={si} width="16" height="16" viewBox="0 0 24 24" fill="#00e5ff"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2 + si * 0.05 }}
-                    >
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </motion.svg>
-                  ))}
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                {t.result}
+              </motion.div>
+              {/* Author */}
+              <motion.div className="tg-author"
+                initial={{ opacity: 0, y: 10 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.75 + i * 0.12 }}
+              >
+                <div className="tg-avatar-wrap">
+                  <div className="tg-avatar">{t.initials}</div>
+                  <div className="tg-pulse-ring" />
                 </div>
-                <p className="t-quote">"{TESTIMONIALS[active].quote}"</p>
-                <div className="t-author">
-                  <div className="t-avatar">{TESTIMONIALS[active].initials}</div>
-                  <div>
-                    <div className="t-name">{TESTIMONIALS[active].name}</div>
-                    <div className="t-company">{TESTIMONIALS[active].company}</div>
-                  </div>
+                <div>
+                  <div className="tg-name">{t.name}</div>
+                  <div className="tg-company">{t.company}</div>
                 </div>
               </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Dots */}
-        <div className="t-dots">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              className={`t-dot${i === active ? " t-dot-active" : ""}`}
-              onClick={() => setActive(i)}
-              aria-label={`Testimonial ${i + 1}`}
-            />
+            </motion.div>
           ))}
-        </div>
-
-        {/* Prev / Next arrows */}
-        <div className="t-arrows">
-          <button className="t-arrow" onClick={() => setActive((active - 1 + total) % total)} aria-label="Previous">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <button className="t-arrow" onClick={() => setActive((active + 1) % total)} aria-label="Next">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
         </div>
       </div>
       <style jsx>{`
-        .t-window { position: relative; min-height: 320px; display: flex; align-items: center; justify-content: center; }
-        .testimonial-card { width: 100%; position: relative; }
+        .tg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .tg-card {
+          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
+          border-radius: 20px; padding: 32px 28px;
+          display: flex; flex-direction: column; gap: 14px;
+          position: relative; overflow: hidden; cursor: default;
+          transition: border-color .3s;
+        }
+        .tg-scan {
+          position: absolute; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0,229,255,0.5), transparent);
+          top: -4px; opacity: 0; transition: opacity .3s;
+          animation: tgScanMove 4s linear infinite paused;
+        }
+        .tg-card:hover .tg-scan { opacity: 1; animation-play-state: running; }
+        @keyframes tgScanMove { 0% { top: 0%; } 100% { top: 100%; } }
+        .tg-stars { display: flex; gap: 3px; }
+        .tg-quote { font-size: 13.5px; color: rgba(255,255,255,0.65); line-height: 1.8; font-style: italic; flex: 1; }
+        .tg-result {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #00e5ff;
+          background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.2);
+          border-radius: 50px; padding: 5px 12px; width: fit-content;
+          position: relative; overflow: hidden;
+        }
+        .tg-result::after {
+          content: ''; position: absolute; inset: 0;
+          background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.25) 50%, transparent 100%);
+          transform: translateX(-100%); animation: shimmer 2.5s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .tg-author { display: flex; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .tg-avatar-wrap { position: relative; flex-shrink: 0; }
+        .tg-avatar {
+          width: 42px; height: 42px; border-radius: 50%;
+          background: rgba(0,229,255,0.1); border: 2px solid rgba(0,229,255,0.28);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 700; color: #00e5ff; position: relative; z-index: 1;
+        }
+        .tg-pulse-ring {
+          position: absolute; inset: -4px; border-radius: 50%;
+          border: 1px solid rgba(0,229,255,0.3);
+          animation: avatarPulse 2s ease-in-out infinite;
+        }
+        @keyframes avatarPulse { 0%,100%{transform:scale(1);opacity:.4;} 50%{transform:scale(1.18);opacity:.9;} }
+        .tg-name { font-size: 13px; font-weight: 700; color: #fff; }
+        .tg-company { font-size: 11px; color: rgba(0,229,255,0.6); margin-top: 1px; }
+        @media (max-width: 960px) { .tg-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .tg-grid { grid-template-columns: 1fr; } }
       `}</style>
     </section>
   );
 }
+
+/* ─────────────────────────────────────────────
+   CASE STUDIES
+───────────────────────────────────────────── */
+const CASE_STUDIES = [
+  {
+    industry: "E-Commerce / Fashion",
+    client: "UrbanVibe Co.",
+    problem: "Low organic reach and stagnant sales despite paid ads spend.",
+    metrics: ["+340% Organic Reach", "3× Sales in 90 Days", "₹2.4L Ad Spend Saved"],
+    tags: ["SEO", "Social Media", "Content"],
+  },
+  {
+    industry: "Legal Services",
+    client: "LegalEdge India",
+    problem: "Zero digital presence, relying entirely on word-of-mouth referrals.",
+    metrics: ["Page 1 Google — 12 Keywords", "+220% Website Traffic", "60+ Qualified Leads/Month"],
+    tags: ["SEO", "Web Dev", "Google Ads"],
+  },
+  {
+    industry: "Health & Wellness",
+    client: "Bloom Lifestyle",
+    problem: "Inconsistent content strategy and low Instagram engagement.",
+    metrics: ["+40K Followers in 4 Months", "8.2% Avg Engagement Rate", "2× Revenue"],
+    tags: ["Instagram", "Content", "Reels"],
+  },
+];
+
+function CaseStudiesSection() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const glitchedTitle = useGlitchText("Case Studies", inView);
+
+  return (
+    <section className="section case-section" ref={ref}>
+      <div className="section-inner">
+        <div className="section-heading-wrap">
+          <motion.h2 className="section-heading" initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
+            {glitchedTitle}
+          </motion.h2>
+          <motion.div className="cyan-underline" initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
+          <AnimatedText text="Real campaigns. Real numbers. Real impact." className="section-sub" delay={0.6} />
+        </div>
+        <div className="cs-grid">
+          {CASE_STUDIES.map((cs, i) => (
+            <motion.div
+              key={i} className="cs-card"
+              initial={{ opacity: 0, y: 60, rotate: i % 2 === 0 ? -2 : 2 }}
+              animate={inView ? { opacity: 1, y: 0, rotate: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 + i * 0.15, ease: [0.23, 1, 0.32, 1] }}
+              whileHover={{ y: -10, rotate: 0, boxShadow: "0 28px 64px rgba(0,229,255,0.14)", borderColor: "rgba(0,229,255,0.4)" }}
+            >
+              <ARBrackets size={14} color="rgba(0,229,255,0.25)" />
+              <div className="cs-glow-bar" />
+              <motion.div className="cs-industry"
+                initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.4 + i * 0.15 }}
+              >{cs.industry}</motion.div>
+              <motion.h3 className="cs-client"
+                initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.5 + i * 0.15 }}
+              >{cs.client}</motion.h3>
+              <motion.p className="cs-problem"
+                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.6 + i * 0.15 }}
+              >{cs.problem}</motion.p>
+              <div className="cs-metrics">
+                {cs.metrics.map((m, mi) => (
+                  <motion.div key={mi} className="cs-metric"
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.65 + i * 0.15 + mi * 0.08, ease: "easeOut" }}
+                  >
+                    <motion.span className="cs-check-icon"
+                      initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
+                      transition={{ delay: 0.7 + i * 0.15 + mi * 0.08, type: "spring", stiffness: 400 }}
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </motion.span>
+                    {m}
+                  </motion.div>
+                ))}
+              </div>
+              <div className="cs-tags">
+                {cs.tags.map((tag, ti) => (
+                  <motion.span key={ti} className="cs-tag"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={inView ? { scale: 1, opacity: 1 } : {}}
+                    transition={{ delay: 0.8 + i * 0.15 + ti * 0.06, type: "spring", stiffness: 350 }}
+                  >{tag}</motion.span>
+                ))}
+              </div>
+              <motion.div className="cs-coming"
+                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 1.0 + i * 0.15 }}
+              >Full Case Study — Coming Soon</motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <style jsx>{`
+        .case-section { background: #07090e; overflow: hidden; }
+        .cs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; perspective: 1000px; }
+        .cs-card {
+          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
+          border-radius: 22px; padding: 36px 28px; position: relative;
+          display: flex; flex-direction: column; gap: 16px;
+          overflow: hidden; cursor: default; transition: border-color .3s;
+        }
+        .cs-glow-bar {
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+          opacity: 0; transition: opacity .4s;
+          animation: csGlowMove 3s linear infinite paused;
+        }
+        .cs-card:hover .cs-glow-bar { opacity: 1; animation-play-state: running; }
+        @keyframes csGlowMove { 0%{background-position:0%} 100%{background-position:200%} }
+        .cs-industry { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: rgba(0,229,255,0.55); font-family: monospace; }
+        .cs-client { font-size: 22px; font-weight: 800; color: #fff; margin: 0; }
+        .cs-problem { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.75; }
+        .cs-metrics { display: flex; flex-direction: column; gap: 9px; }
+        .cs-metric { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
+        .cs-check-icon { display: flex; flex-shrink: 0; }
+        .cs-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .cs-tag {
+          font-size: 10px; font-weight: 700; letter-spacing: .1em; padding: 4px 10px;
+          border-radius: 50px; background: rgba(0,229,255,0.07);
+          border: 1px solid rgba(0,229,255,0.2); color: #00e5ff;
+          transition: background .3s, box-shadow .3s;
+        }
+        .cs-tag:hover { background: rgba(0,229,255,0.15); box-shadow: 0 0 12px rgba(0,229,255,0.25); }
+        .cs-coming { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: .1em; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; font-family: monospace; }
+        @media (max-width: 960px) { .cs-grid { grid-template-columns: 1fr; } }
+      `}</style>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   BLOG / RESOURCES
+───────────────────────────────────────────── */
+const BLOG_POSTS = [
+  { category: "AI Marketing",      title: "How AI is Replacing Manual Marketing Tasks in 2025",              excerpt: "From automated copywriting to predictive audience targeting — discover how forward-thinking brands are letting AI do the heavy lifting and scaling faster than ever.", readTime: "5 min read" },
+  { category: "Social Media",      title: "The Instagram Algorithm Decoded: What Actually Works in 2025",    excerpt: "We analysed 200+ accounts and 10,000+ posts to uncover the exact posting patterns, content types, and engagement triggers that drive explosive organic growth.",   readTime: "7 min read" },
+  { category: "Web & Automation",  title: "Why Your Website Is Losing You Customers (And How to Fix It)",   excerpt: "Page speed, mobile UX, and conversion architecture — the three pillars that separate high-converting websites from digital brochures nobody reads.",                readTime: "6 min read" },
+];
+
+function BlogSection() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const glitchedTitle = useGlitchText("Insights & Resources", inView);
+
+  return (
+    <section className="section blog-section" ref={ref}>
+      <div className="section-inner">
+        <div className="section-heading-wrap">
+          <motion.h2 className="section-heading" initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
+            {glitchedTitle}
+          </motion.h2>
+          <motion.div className="cyan-underline" initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
+          <AnimatedText text="AI insights, growth strategies, and digital trends — published by our team." className="section-sub" delay={0.6} />
+        </div>
+        <div className="blog-grid">
+          {BLOG_POSTS.map((post, i) => (
+            <motion.div key={i} className="blog-card"
+              initial={{ opacity: 0, y: 50, rotate: i === 1 ? 0 : i === 0 ? -1.5 : 1.5, scale: 0.96 }}
+              animate={inView ? { opacity: 1, y: 0, rotate: 0, scale: 1 } : {}}
+              transition={{ duration: 0.7, delay: 0.15 + i * 0.15, ease: [0.23, 1, 0.32, 1] }}
+              whileHover={{ y: -10, boxShadow: "0 28px 64px rgba(0,229,255,0.13)", borderColor: "rgba(0,229,255,0.4)" }}
+            >
+              <ARBrackets size={12} color="rgba(0,229,255,0.18)" />
+              <div className="blog-top">
+                <motion.span className="blog-cat"
+                  animate={{ boxShadow: ["0 0 0px rgba(0,229,255,0)", "0 0 12px rgba(0,229,255,0.4)", "0 0 0px rgba(0,229,255,0)"] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.8 }}
+                >{post.category}</motion.span>
+                <span className="blog-time">{post.readTime}</span>
+              </div>
+              <motion.h3 className="blog-title"
+                initial={{ opacity: 0, x: -10 }} animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ delay: 0.35 + i * 0.15 }}
+              >{post.title}</motion.h3>
+              <motion.p className="blog-excerpt"
+                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.5 + i * 0.15 }}
+              >{post.excerpt}</motion.p>
+              <div className="blog-coming">
+                <span>Full Article — Coming Soon</span>
+                <motion.span className="blog-arrow"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </motion.span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <style jsx>{`
+        .blog-section { background: #060a0f; }
+        .blog-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; perspective: 1000px; }
+        .blog-card {
+          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
+          border-radius: 22px; padding: 32px 28px; position: relative;
+          display: flex; flex-direction: column; gap: 14px;
+          transition: border-color .3s; cursor: default; overflow: hidden;
+        }
+        .blog-top { display: flex; justify-content: space-between; align-items: center; }
+        .blog-cat {
+          font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+          color: #00e5ff; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.22);
+          border-radius: 50px; padding: 4px 10px; transition: background .3s;
+        }
+        .blog-card:hover .blog-cat { background: rgba(0,229,255,0.16); }
+        .blog-time { font-size: 11px; color: rgba(255,255,255,0.3); font-family: monospace; }
+        .blog-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.4; margin: 0; transition: color .3s; }
+        .blog-card:hover .blog-title { color: #00e5ff; }
+        .blog-excerpt { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.8; flex: 1; }
+        .blog-coming {
+          display: flex; align-items: center; justify-content: space-between;
+          font-size: 12px; color: rgba(0,229,255,0.55); border-top: 1px solid rgba(255,255,255,0.06);
+          padding-top: 14px; font-weight: 600; letter-spacing: .05em;
+        }
+        .blog-arrow { display: flex; color: rgba(0,229,255,0.55); }
+        @media (max-width: 960px) { .blog-grid { grid-template-columns: 1fr; } }
+      `}</style>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   FAQ
+───────────────────────────────────────────── */
+const FAQS = [
+  { q: "How long before I see results?",                     a: "Most clients begin seeing measurable improvements in engagement, reach, and leads within 30–60 days. SEO results typically compound over 90–120 days. We set clear milestones at the start so you always know what to expect." },
+  { q: "Do you sign contracts?",                             a: "Yes. Every engagement is backed by a transparent service agreement outlining deliverables, timelines, and payment terms. There are no hidden clauses — just clear, mutual accountability." },
+  { q: "Can I cancel anytime?",                             a: "Our plans run on a monthly cycle. You may cancel with 15 days' written notice before your next billing date. We believe in earning your business every month, not locking you in." },
+  { q: "What makes BotMate different from other agencies?",  a: "We combine AI-powered automation with human creativity. Every strategy is backed by real data, and we never use generic templates. You get a dedicated team that treats your brand as if it were their own." },
+  { q: "Which social media platforms do you manage?",        a: "We specialise in Instagram, Facebook, LinkedIn, and YouTube. Depending on your niche and audience, we'll recommend the platforms that will drive the most ROI for your business." },
+  { q: "Do I need to provide the content and photos?",      a: "Not necessarily. Our Business and Enterprise plans include professional shoot sessions. For the Starter plan, we can work with content you provide or source high-quality stock visuals on your behalf." },
+  { q: "Will I get reports to track progress?",             a: "Absolutely. All clients receive monthly performance reports covering reach, engagement, leads, conversions, and ad spend ROI. We also hold review calls to walk you through the numbers." },
+  { q: "Do you handle paid advertising (Google Ads, Meta Ads)?", a: "Yes. We manage end-to-end paid campaigns including strategy, creatives, audience targeting, A/B testing, and optimisation. Paid ad spend is billed separately from our management fee." },
+  { q: "Can you build or redesign my website?",             a: "Yes — web development is one of our core services. We build fast, mobile-first, conversion-optimised websites and landing pages. All sites are SEO-ready from day one." },
+  { q: "Is there a minimum commitment period?",             a: "We recommend a minimum of 3 months for meaningful results, especially for SEO and organic growth. However, you are never locked in — we operate month-to-month after the initial period." },
+  { q: "What industries do you work with?",                 a: "We work with brands across e-commerce, real estate, healthcare, education, legal, F&B, fashion, and more. If you have an audience to reach, we have a strategy to reach them." },
+];
+
+
+
+function FAQSection() {
+  const [open, setOpen] = useState<number | null>(null);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.1 });
+  const glitchedTitle = useGlitchText("Frequently Asked", inView);
+
+  return (
+    <section className="section faq-section" ref={ref}>
+      <div className="section-inner">
+        <div className="section-heading-wrap">
+          <motion.h2 className="section-heading" initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
+            {glitchedTitle} <span style={{ color: "#00e5ff" }}>Questions</span>
+          </motion.h2>
+          <motion.div className="cyan-underline" initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
+          <AnimatedText text="Everything you need to know before we get started." className="section-sub" delay={0.6} />
+        </div>
+        <div className="faq-list">
+          {FAQS.map((faq, i) => (
+            <motion.div
+              key={i}
+              className={`faq-item${open === i ? " faq-open" : ""}`}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.05 + i * 0.055, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <div className="faq-left-bar" />
+              <button className="faq-q" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
+                <motion.span
+                  className="faq-num"
+                  animate={open === i ? { color: "#00e5ff", boxShadow: "0 0 16px rgba(0,229,255,0.5)" } : { color: "rgba(0,229,255,0.3)", boxShadow: "none" }}
+                  transition={{ duration: 0.3 }}
+                >{String(i + 1).padStart(2, "0")}</motion.span>
+                <span className="faq-qtext">{faq.q}</span>
+                <motion.span
+                  className="faq-icon"
+                  animate={{ rotate: open === i ? 45 : 0, color: open === i ? "#00e5ff" : "rgba(0,229,255,0.5)" }}
+                  transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </motion.span>
+              </button>
+              <AnimatePresence>
+                {open === i && (
+                  <motion.div
+                    className="faq-a"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.38, ease: "easeInOut" }}
+                  >
+                    <div className="faq-a-scan" />
+                    <p>{faq.a}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      <style jsx>{`
+        .faq-section { background: #07090e; }
+        .faq-list { max-width: 820px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+        .faq-item {
+          border: 1px solid rgba(0,229,255,0.1); border-radius: 16px;
+          overflow: hidden; transition: border-color .3s, background .3s;
+          position: relative;
+        }
+        .faq-left-bar {
+          position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+          background: #00e5ff; border-radius: 3px 0 0 3px;
+          transform: scaleY(0); transform-origin: bottom;
+          transition: transform .35s ease;
+        }
+        .faq-open .faq-left-bar { transform: scaleY(1); }
+        .faq-open { border-color: rgba(0,229,255,0.35); background: rgba(0,229,255,0.025); }
+        .faq-q {
+          width: 100%; padding: 20px 24px 20px 20px;
+          display: flex; align-items: center; gap: 14px;
+          background: transparent; border: none; cursor: pointer;
+          text-align: left; font-family: inherit;
+        }
+        .faq-q:hover .faq-qtext { color: #00e5ff; }
+        .faq-num {
+          font-family: monospace; font-size: 13px; font-weight: 700;
+          min-width: 32px; height: 32px; border-radius: 8px;
+          border: 1px solid rgba(0,229,255,0.2);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0; transition: background .3s;
+        }
+        .faq-open .faq-num { background: rgba(0,229,255,0.1); }
+        .faq-qtext { font-size: 15px; font-weight: 600; color: #fff; flex: 1; transition: color .3s; line-height: 1.4; }
+        .faq-icon { flex-shrink: 0; display: flex; }
+        .faq-a { overflow: hidden; position: relative; }
+        .faq-a-scan {
+          position: absolute; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0,229,255,0.4), transparent);
+          animation: faqScan 3s linear infinite;
+        }
+        @keyframes faqScan { 0% { top: 0%; } 100% { top: 100%; } }
+        .faq-a p { padding: 4px 24px 22px 70px; font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.85; margin: 0; }
+      `}</style>
+    </section>
+  );
+}
+
 
 /* ─────────────────────────────────────────────
    CTA BANNER
@@ -736,7 +1140,7 @@ function CTABanner() {
       <div className="cta-inner">
         <h2 className="cta-heading">{glitchedTitle}</h2>
         <AnimatedText 
-          text="Join 200+ businesses already scaling with BotMate's AI-powered strategies." 
+          text="Join 50+ businesses already scaling with BotMate's AI-powered strategies." 
           className="cta-sub"
           delay={0.2}
         />
@@ -803,6 +1207,9 @@ export default function Home() {
       <ProcessSection />
       <PricingSection />
       <TestimonialsSection />
+      <CaseStudiesSection />
+      <BlogSection />
+      <FAQSection />
       <CTABanner />
       <SiteFooter />
 
