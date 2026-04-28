@@ -19,7 +19,7 @@ function useGlitchText(text: string, trigger: boolean) {
       setDisplay(
         text.split("").map((letter, idx) => {
           if (idx < iter) return letter;
-          if (letter === " ") return " ";
+          if (letter === " ") return "\u00A0"; // non-breaking space — never collapses
           return chars[Math.floor(Math.random() * chars.length)];
         }).join("")
       );
@@ -299,12 +299,14 @@ export default function Hero() {
           font-size: clamp(40px, 5vw, 68px);
           font-weight: 700; line-height: 1.08;
           color: #fff; letter-spacing: -1.5px;
+          word-spacing: 0.1em; /* prevents word-crush */
           margin-bottom: 22px;
         }
         .hero-title .highlight {
           color: #00e5ff; display: block;
           text-shadow: 0 0 30px rgba(0,229,255,0.4);
           letter-spacing: -2px;
+          word-spacing: 0.15em;
           margin-top: 5px;
         }
 

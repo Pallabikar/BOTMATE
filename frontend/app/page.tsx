@@ -19,7 +19,7 @@ function useGlitchText(text: string, trigger: boolean) {
       setDisplay(
         text.split("").map((letter, idx) => {
           if (idx < iter) return letter;
-          if (letter === " ") return " ";
+          if (letter === " ") return "\u00A0"; // non-breaking space — never collapses
           return chars[Math.floor(Math.random() * chars.length)];
         }).join("")
       );
@@ -282,25 +282,28 @@ function ServicesSection() {
 ───────────────────────────────────────────── */
 function StatCard({ value, suffix, label }: { value: number; suffix: string; label: string }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-  
-  const spring = useSpring(0, { damping: 30, stiffness: 100 });
-  const display = useTransform(spring, (v) => Math.round(v).toString() + suffix);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  const spring = useSpring(0, { damping: 35, stiffness: 90 });
 
   useEffect(() => {
     if (inView) spring.set(value);
   }, [inView, value, spring]);
 
   return (
-    <motion.div 
-      className="stat-card" 
+    <motion.div
+      className="stat-card"
       ref={ref}
       initial={{ opacity: 0, scale: 0.9 }}
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.5 }}
     >
       <ARBrackets size={12} color="rgba(0,229,255,0.2)" />
-      <motion.div className="stat-number">{display}</motion.div>
+      {/* motion.span required — MotionValues only update inside motion elements */}
+      <motion.span className="stat-number">
+        <motion.span>{useTransform(spring, (v) => Math.round(v).toString())}</motion.span>
+        {suffix}
+      </motion.span>
       <div className="stat-label">{label}</div>
     </motion.div>
   );
@@ -1477,6 +1480,7 @@ export default function Home() {
           font-weight: 800;
           color: #fff;
           letter-spacing: -1px;
+          word-spacing: 0.08em; /* prevents word-crush with negative letter-spacing */
           margin-bottom: 14px;
         }
         .section-sub {

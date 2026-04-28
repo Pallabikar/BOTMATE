@@ -98,7 +98,7 @@ export const AnimatedText = ({
         initial="initial"
         animate={isInView ? "animate" : "initial"}
         transition={{ staggerChildren: 0.02, delayChildren: delay }}
-        style={{ display: "inline-block" }}
+        style={{ display: "flex", flexWrap: "wrap", gap: "0.25em" }}
       >
         {words.map((word, i) => (
           <span key={i} style={{ display: "inline-block", overflow: "hidden", verticalAlign: "bottom" }}>
@@ -108,9 +108,8 @@ export const AnimatedText = ({
                 animate: { y: 0, opacity: 1 }
               }}
               transition={TRANSITION_MEDIUM}
-              style={{ 
-                display: "inline-block", 
-                marginRight: "0.25em",
+              style={{
+                display: "inline-block",
                 color: isHighlighted(word) ? "#00e5ff" : "inherit",
                 fontWeight: isHighlighted(word) ? 700 : "inherit"
               }}
@@ -122,6 +121,7 @@ export const AnimatedText = ({
       </motion.span>
     </Tag>
   );
+
 };
 
 /**
