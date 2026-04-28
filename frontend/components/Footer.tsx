@@ -2,306 +2,472 @@
 
 import React from "react";
 import Link from "next/link";
-
-import { Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react";
-import { StaggerReveal, RevealItem, AnimatedText } from "./AnimationSystem";
-import Magnetic from "./Magnetic";
+import { Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 
 export default function GlobalFooter() {
   return (
     <footer className="global-footer">
 
-      <StaggerReveal stagger={0.15}>
+      {/* Top accent line */}
+      <div className="footer-accent-line" aria-hidden="true" />
+
+      <div className="footer-body">
         <div className="footer-inner">
 
-          {/* Brand */}
-          <RevealItem>
-            <div className="footer-col brand-col">
-              <Magnetic amount={0.25}>
-                <Link href="/" className="footer-logo">
-                  <img
-                    src="https://res.cloudinary.com/dh6ibke5w/image/upload/v1777274506/botmate-icon_t2vtig.png"
-                    alt="BotMate Logo"
-                    className="footer-logo-img"
-                  />
-                </Link>
-              </Magnetic>
-
-              <div className="footer-tagline-wrap">
-                <AnimatedText
-                  text="Leading the digital evolution through AI-driven strategies, futuristic design, and high-performance automation."
-                  className="footer-tagline"
-                  delay={0.4}
-                />
-              </div>
-
-              <div className="footer-socials">
-                <Magnetic amount={0.3}>
-                  <a href="#" className="footer-social"><Twitter size={14} /></a>
-                </Magnetic>
-                <Magnetic amount={0.3}>
-                  <a href="#" className="footer-social"><Linkedin size={14} /></a>
-                </Magnetic>
-                <Magnetic amount={0.3}>
-                  <a href="https://www.instagram.com/thebotmate" target="_blank" className="footer-social">
-                    <Instagram size={14} />
-                  </a>
-                </Magnetic>
-              </div>
+          {/* ── Brand Column ── */}
+          <div className="footer-col brand-col">
+            <Link href="/" className="footer-logo-wrap">
+              <img
+                src="https://res.cloudinary.com/dh6ibke5w/image/upload/v1777274506/botmate-icon_t2vtig.png"
+                alt="BotMate Logo"
+                className="footer-logo-img"
+              />
+            </Link>
+            <p className="footer-tagline">
+              AI-driven marketing, futuristic design, and high-performance automation — built for brands that refuse to be ordinary.
+            </p>
+            <div className="footer-socials">
+              <a href="#" className="footer-social" aria-label="Twitter">
+                <Twitter size={13} />
+              </a>
+              <a href="#" className="footer-social" aria-label="LinkedIn">
+                <Linkedin size={13} />
+              </a>
+              <a href="https://www.instagram.com/thebotmate" target="_blank" rel="noopener noreferrer" className="footer-social" aria-label="Instagram">
+                <Instagram size={13} />
+              </a>
             </div>
-          </RevealItem>
+          </div>
 
-          {/* Links */}
-          <RevealItem>
-            <div className="footer-col">
-              <h4 className="footer-col-heading">Quick Links</h4>
-              <ul className="footer-links">
-                <li><Link href="/" className="footer-link">Home</Link></li>
-                <li><Link href="/about" className="footer-link">About Us</Link></li>
-                <li><Link href="/services" className="footer-link">Services</Link></li>
-                <li><Link href="/packages" className="footer-link">Packages</Link></li>
-              </ul>
-            </div>
-          </RevealItem>
+          {/* ── Navigation Column ── */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Company</h4>
+            <ul className="footer-links">
+              {[
+                { label: "Home",        href: "/" },
+                { label: "About Us",    href: "/about" },
+                { label: "Services",    href: "/services" },
+                { label: "Packages",    href: "/packages" },
+                { label: "Case Studies",href: "/case-studies" },
+                { label: "Blog",        href: "/blog" },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="footer-link">
+                    <span className="footer-link-dot" aria-hidden="true" />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* Contact */}
-          <RevealItem>
-            <div className="footer-col">
-              <h4 className="footer-col-heading">Contact Us</h4>
-              <ul className="footer-contact-list">
-                <li><Mail size={14} /><span>contactbotmate@gmail.com</span></li>
-                <li><Phone size={14} /><span>+91 97772 09527</span></li>
-                <li><MapPin size={14} /><span>Bhubaneswar, ODISHA 751015</span></li>
-              </ul>
-            </div>
-          </RevealItem>
+          {/* ── Services Column ── */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Services</h4>
+            <ul className="footer-links">
+              {[
+                "SEO Optimization",
+                "Social Media",
+                "AI Chatbots",
+                "Paid Advertising",
+                "Content Creation",
+                "Web Development",
+              ].map((s) => (
+                <li key={s}>
+                  <Link href="/services" className="footer-link">
+                    <span className="footer-link-dot" aria-hidden="true" />
+                    {s}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* CTA */}
-          <RevealItem>
-            <div className="footer-col cta-col">
-              <h4 className="footer-col-heading">Work With Us</h4>
-              <p className="footer-cta-text">Ready to scale your brand with AI-powered marketing? Let's build something remarkable together.</p>
-              <a href="/get-started" className="footer-cta-btn">Get Started →</a>
-              <a href="/contact" className="footer-cta-link">Or book a free call</a>
+          {/* ── Contact + CTA Column ── */}
+          <div className="footer-col">
+            <h4 className="footer-heading">Contact</h4>
+            <ul className="footer-contact-list">
+              <li>
+                <span className="footer-contact-icon"><Mail size={13} /></span>
+                <a href="mailto:contactbotmate@gmail.com" className="footer-contact-val">
+                  contactbotmate@gmail.com
+                </a>
+              </li>
+              <li>
+                <span className="footer-contact-icon"><Phone size={13} /></span>
+                <a href="tel:+919777209527" className="footer-contact-val">
+                  +91 97772 09527
+                </a>
+              </li>
+              <li>
+                <span className="footer-contact-icon"><MapPin size={13} /></span>
+                <span className="footer-contact-val">Bhubaneswar, Odisha 751015</span>
+              </li>
+            </ul>
+
+            {/* CTA card */}
+            <div className="footer-cta-card">
+              <p className="footer-cta-text">
+                Ready to scale your brand with AI-powered strategies?
+              </p>
+              <a href="/get-started" className="footer-cta-btn">
+                Get Started
+                <ArrowUpRight size={14} />
+              </a>
+              <a href="/contact" className="footer-cta-ghost">Book a free strategy call</a>
             </div>
-          </RevealItem>
+          </div>
 
         </div>
-      </StaggerReveal>
+      </div>
 
-      {/* Bottom */}
+      {/* ── Bottom Bar ── */}
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
-          <p>© {new Date().getFullYear()} BOTMATE AI SYSTEMS. ALL RIGHTS RESERVED.</p>
-          <div className="footer-meta">
-            <span>SECURE CONNECTION</span>
-            <div className="status-dot" />
+          <p className="footer-copy">
+            © {new Date().getFullYear()} BotMate AI Systems. All rights reserved.
+          </p>
+          <div className="footer-legal">
+            <Link href="/privacy" className="footer-legal-link">Privacy Policy</Link>
+            <span className="footer-legal-sep" aria-hidden="true">·</span>
+            <Link href="/terms" className="footer-legal-link">Terms of Service</Link>
+          </div>
+          <div className="footer-status">
+            <span className="status-dot" aria-hidden="true" />
+            <span>All systems operational</span>
           </div>
         </div>
       </div>
 
       <style jsx>{`
+        /* ── Variables ── */
         .global-footer {
-          background: #030609;
-          border-top: 1px solid rgba(0,229,255,0.08);
-          color: #fff;
-          padding-top: 100px;
+          --gold: #c9a84c;
+          --gold-dim: rgba(201,168,76,0.12);
+          --gold-border: rgba(201,168,76,0.2);
+          --bg: #050402;
+          --text-primary: #f0ead8;
+          --text-muted: rgba(240,234,216,0.38);
+          --text-secondary: rgba(240,234,216,0.55);
+          --border: rgba(201,168,76,0.1);
+          --font-display: 'Cormorant Garamond', Georgia, serif;
+          --font-body: 'DM Sans', system-ui, sans-serif;
+
+          background: var(--bg);
+          color: var(--text-primary);
+          font-family: var(--font-body);
+          position: relative;
+        }
+
+        /* ── Accent Line ── */
+        .footer-accent-line {
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, rgba(201,168,76,0.4) 50%, var(--gold) 70%, transparent 100%);
+          opacity: 0.5;
+        }
+
+        /* ── Body ── */
+        .footer-body {
+          padding: 80px 0 72px;
         }
 
         .footer-inner {
-          max-width: 1280px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 0 48px;
           display: grid;
-          grid-template-columns: 1.4fr 0.9fr 1.1fr 1.2fr;
-          gap: 60px;
+          grid-template-columns: 1.5fr 0.8fr 0.8fr 1.3fr;
+          gap: 64px;
+          align-items: start;
         }
 
-        /* 🔥 BRAND */
+        /* ── Brand ── */
         .brand-col {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          gap: 0;
+        }
+
+        .footer-logo-wrap {
+          display: inline-block;
+          margin-bottom: 22px;
         }
 
         .footer-logo-img {
-          height: 65px; /* 🔥 ENLARGED */
+          height: 60px;
           width: auto;
-          margin-bottom: 28px;
           object-fit: contain;
-          filter: drop-shadow(0 0 12px rgba(0, 229, 255, 0.25));
-          transition: transform 0.3s ease;
+          display: block;
+          transition: opacity 0.25s;
         }
 
-        .footer-logo-img:hover {
-          transform: scale(1.06);
-        }
+        .footer-logo-img:hover { opacity: 0.82; }
 
         .footer-tagline {
           font-size: 13.5px;
-          color: rgba(255,255,255,0.45);
-          line-height: 1.8;
-          margin-bottom: 30px;
-          max-width: 300px;
+          color: var(--text-secondary);
+          line-height: 1.82;
+          max-width: 280px;
+          margin-bottom: 28px;
         }
 
-        /* SOCIAL */
         .footer-socials {
           display: flex;
-          gap: 12px;
+          gap: 10px;
         }
 
         .footer-social {
-          width: 38px;
-          height: 38px;
-          border-radius: 12px;
-          background: rgba(0,229,255,0.04);
-          border: 1px solid rgba(0,229,255,0.12);
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: var(--gold-dim);
+          border: 1px solid var(--border);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: rgba(255,255,255,0.5);
-          transition: 0.3s;
+          color: var(--text-muted);
+          transition: all 0.25s ease;
+          text-decoration: none;
         }
 
         .footer-social:hover {
-          border-color: #00e5ff;
-          color: #00e5ff;
-          transform: translateY(-3px);
-          box-shadow: 0 5px 15px rgba(0,229,255,0.2);
+          border-color: var(--gold);
+          color: var(--gold);
+          background: rgba(201,168,76,0.08);
+          transform: translateY(-2px);
         }
 
-        /* HEADINGS */
-        .footer-col-heading {
-          font-size: 11px;
-          font-weight: 800;
+        /* ── Columns ── */
+        .footer-col {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .footer-heading {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.26em;
           text-transform: uppercase;
-          letter-spacing: 0.2em;
-          color: rgba(255,255,255,0.3);
+          color: var(--gold);
+          opacity: 0.7;
           margin-bottom: 24px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid var(--border);
         }
 
-        /* LINKS */
+        /* ── Links ── */
         .footer-links {
           list-style: none;
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 11px;
         }
 
         .footer-link {
-          font-size: 14px;
-          color: rgba(255,255,255,0.5);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13.5px;
+          color: var(--text-secondary);
           text-decoration: none;
+          transition: color 0.2s, gap 0.2s;
+        }
+
+        .footer-link-dot {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--gold);
+          opacity: 0;
+          flex-shrink: 0;
+          transition: opacity 0.2s;
         }
 
         .footer-link:hover {
-          color: #00e5ff;
+          color: var(--text-primary);
+          gap: 10px;
         }
 
-        /* CONTACT */
+        .footer-link:hover .footer-link-dot {
+          opacity: 0.7;
+        }
+
+        /* ── Contact ── */
         .footer-contact-list {
           list-style: none;
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
+          margin-bottom: 32px;
         }
 
         .footer-contact-list li {
           display: flex;
-          gap: 12px;
-          font-size: 13.5px;
-          color: rgba(255,255,255,0.45);
+          align-items: flex-start;
+          gap: 11px;
         }
 
-        /* CTA COL */
+        .footer-contact-icon {
+          flex-shrink: 0;
+          width: 28px;
+          height: 28px;
+          border-radius: 7px;
+          background: var(--gold-dim);
+          border: 1px solid var(--border);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--gold);
+          opacity: 0.8;
+          margin-top: 1px;
+        }
+
+        .footer-contact-val {
+          font-size: 13px;
+          color: var(--text-secondary);
+          text-decoration: none;
+          line-height: 1.6;
+          padding-top: 5px;
+          transition: color 0.2s;
+        }
+
+        a.footer-contact-val:hover { color: var(--gold); }
+
+        /* ── CTA Card ── */
+        .footer-cta-card {
+          border: 1px solid var(--gold-border);
+          border-radius: 10px;
+          padding: 22px 20px;
+          background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 100%);
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
         .footer-cta-text {
           font-size: 13px;
-          color: rgba(255,255,255,0.4);
-          line-height: 1.8;
-          margin-bottom: 22px;
+          color: var(--text-secondary);
+          line-height: 1.7;
         }
+
         .footer-cta-btn {
-          display: inline-block;
-          background: #00e5ff;
-          color: #000;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: linear-gradient(135deg, #c9a84c, #e8c97a);
+          color: #0a0804;
           font-size: 13px;
-          font-weight: 700;
-          padding: 10px 22px;
-          border-radius: 50px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          padding: 10px 20px;
+          border-radius: 5px;
           text-decoration: none;
-          margin-bottom: 12px;
-          transition: box-shadow .3s, transform .3s;
-          box-shadow: 0 0 16px rgba(0,229,255,0.3);
+          align-self: flex-start;
+          transition: all 0.25s;
+          box-shadow: 0 4px 16px rgba(201,168,76,0.25);
         }
+
         .footer-cta-btn:hover {
-          box-shadow: 0 0 28px rgba(0,229,255,0.6);
+          box-shadow: 0 6px 24px rgba(201,168,76,0.4);
           transform: translateY(-2px);
         }
-        .footer-cta-link {
-          display: block;
-          font-size: 12px;
-          color: rgba(0,229,255,0.5);
-          text-decoration: none;
-          transition: color .3s;
-        }
-        .footer-cta-link:hover { color: #00e5ff; }
 
-        /* BOTTOM */
+        .footer-cta-ghost {
+          font-size: 12px;
+          color: rgba(201,168,76,0.5);
+          text-decoration: none;
+          transition: color 0.2s;
+          align-self: flex-start;
+        }
+
+        .footer-cta-ghost:hover { color: var(--gold); }
+
+        /* ── Bottom Bar ── */
         .footer-bottom {
-          border-top: 1px solid rgba(255,255,255,0.05);
-          padding: 30px 0;
-          margin-top: 60px;
+          border-top: 1px solid var(--border);
         }
 
         .footer-bottom-inner {
-          max-width: 1280px;
+          max-width: 1240px;
           margin: 0 auto;
-          padding: 0 48px;
+          padding: 22px 48px;
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          font-size: 11px;
-          color: rgba(255,255,255,0.25);
+          justify-content: space-between;
+          gap: 16px;
         }
 
-        .footer-meta {
+        .footer-copy {
+          font-size: 11.5px;
+          color: var(--text-muted);
+          letter-spacing: 0.02em;
+        }
+
+        .footer-legal {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
+        }
+
+        .footer-legal-link {
+          font-size: 11.5px;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+
+        .footer-legal-link:hover { color: var(--gold); }
+
+        .footer-legal-sep {
+          color: var(--text-muted);
+          font-size: 11px;
+        }
+
+        .footer-status {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 11.5px;
+          color: var(--text-muted);
         }
 
         .status-dot {
           width: 6px;
           height: 6px;
-          background: #00e5ff;
+          background: #4ade80;
           border-radius: 50%;
-          box-shadow: 0 0 8px #00e5ff;
-          animation: pulse 2s infinite;
+          box-shadow: 0 0 6px rgba(74,222,128,0.6);
+          animation: statusPulse 2.5s ease-in-out infinite;
+          flex-shrink: 0;
         }
 
-        @keyframes pulse {
-          0%,100% { transform: scale(1); }
-          50% { transform: scale(1.3); }
+        @keyframes statusPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.25); }
         }
 
-        /* RESPONSIVE */
+        /* ── Responsive ── */
         @media (max-width: 1100px) {
           .footer-inner {
             grid-template-columns: 1fr 1fr;
+            gap: 48px;
           }
         }
 
         @media (max-width: 768px) {
+          .footer-body { padding: 56px 0 52px; }
           .footer-inner {
             grid-template-columns: 1fr;
+            padding: 0 24px;
+            gap: 40px;
           }
-
           .footer-bottom-inner {
+            padding: 20px 24px;
             flex-direction: column;
-            gap: 10px;
             text-align: center;
+            gap: 10px;
           }
+          .footer-tagline { max-width: 100%; }
         }
       `}</style>
     </footer>

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
-import { motion, useInView, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
+import { motion, useInView, useScroll, useTransform, useMotionValue, AnimatePresence, useSpring } from "framer-motion";
 import { AnimatedSection, AnimatedText, StaggerReveal, RevealItem } from "@/components/AnimationSystem";
 
 /* ─────────────────────────────────────────────
@@ -605,166 +605,236 @@ function PricingSection() {
   );
 }
 
-/* ─────────────────────────────────────────────
-   TESTIMONIALS
-───────────────────────────────────────────── */
+
 const TESTIMONIALS = [
-  { quote: "BotMate transformed our online presence completely. Our leads tripled in just 3 months. The team is incredibly professional and results-driven.", name: "Arjun Mehta",   company: "UrbanVibe Co.",        initials: "AM", result: "3× More Leads" },
-  { quote: "The AI chatbot they built for us handles 80% of our customer queries automatically. Absolute game-changer for our e-commerce store.",             name: "Priya Sharma",  company: "GlowBox India",        initials: "PS", result: "80% Queries Automated" },
-  { quote: "From SEO to paid ads, BotMate manages everything seamlessly. We're consistently hitting 5x ROAS on our campaigns now.",                          name: "Rohan Kapoor",  company: "TechNest Solutions",   initials: "RK", result: "5× ROAS Achieved" },
-  { quote: "Their content team is phenomenal. Our Instagram grew by 40K followers in 4 months organically. Truly best-in-class work, delivered on time.",    name: "Sneha Joshi",   company: "Bloom Lifestyle",      initials: "SJ", result: "+40K Followers" },
-  { quote: "The new website they built for us loads in under 1.5 seconds and converts at 8%. Our old site was silently costing us a fortune every month.",   name: "Dev Nair",      company: "FinEdge Advisors",     initials: "DN", result: "8% Conversion Rate" },
-  { quote: "Within 60 days of working with BotMate, our Google ranking jumped to page one for 12 competitive keywords. The ROI speaks for itself.",          name: "Kavya Menon",   company: "LegalEdge India",      initials: "KM", result: "Page 1 Google Rankings" },
+  {
+    quote: "BotMate transformed our online presence completely. Our leads tripled in just 3 months.",
+    name: "Arjun Mehta",
+    company: "UrbanVibe Co.",
+    result: "3× More Leads",
+  },
+  {
+    quote: "The AI chatbot handles 80% of our customer queries automatically.",
+    name: "Priya Sharma",
+    company: "GlowBox India",
+    result: "80% Queries Automated",
+  },
+  {
+    quote: "We’re consistently hitting 5x ROAS on our campaigns now.",
+    name: "Rohan Kapoor",
+    company: "TechNest Solutions",
+    result: "5× ROAS",
+  },
+  {
+    quote: "Our Instagram grew by 40K followers in 4 months organically.",
+    name: "Sneha Joshi",
+    company: "Bloom Lifestyle",
+    result: "+40K Followers",
+  },
 ];
 
 function TestimonialsSection() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-  const glitchedTitle = useGlitchText("What Clients Say", inView);
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: (i: number) => ({
-      opacity: 1, y: 0, scale: 1,
-      transition: { duration: 0.6, delay: 0.1 + i * 0.12 },
-    }),
-  };
+  const [index, setIndex] = useState(0);
+
+  // Auto slide
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const next = () => setIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+  const prev = () =>
+    setIndex((prev) =>
+      prev === 0 ? TESTIMONIALS.length - 1 : prev - 1
+    );
 
   return (
-    <section className="section testimonials-section" ref={ref}>
-      <div className="section-inner">
-        <div className="section-heading-wrap">
-          <motion.h2 
-            className="section-heading"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            {glitchedTitle}
-          </motion.h2>
-          <motion.div 
-            className="cyan-underline" 
-            initial={{ width: 0 }}
-            animate={inView ? { width: 56 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          />
-          <AnimatedText 
-            text="Real results. Real businesses. Real growth." 
-            className="section-sub"
-            delay={0.6}
-          />
+    <section className="test-section">
+      <div className="container">
+        <h2>What Clients Say</h2>
+        <p className="sub">Real results. Real businesses.</p>
+
+        <div className="slider">
+          <button className="nav left" onClick={prev}>‹</button>
+
+          <div className="slide-wrapper">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={index}
+                className="card"
+                initial={{ opacity: 0, x: 80 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -80 }}
+                transition={{ duration: 0.5 }}
+              >
+                <p className="quote">"{TESTIMONIALS[index].quote}"</p>
+
+                <div className="result">
+                  {TESTIMONIALS[index].result}
+                </div>
+
+                <div className="author">
+                  <div className="avatar">
+                    {TESTIMONIALS[index].name[0]}
+                  </div>
+                  <div>
+                    <div className="name">
+                      {TESTIMONIALS[index].name}
+                    </div>
+                    <div className="company">
+                      {TESTIMONIALS[index].company}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <button className="nav right" onClick={next}>›</button>
         </div>
 
-        {/* 6-card grid — all visible at once */}
-        <div className="tg-grid" style={{ perspective: "1200px" }}>
-          {TESTIMONIALS.map((t, i) => (
-            <motion.div
+        {/* Dots */}
+        <div className="dots">
+          {TESTIMONIALS.map((_, i) => (
+            <span
               key={i}
-              className="tg-card"
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              whileHover={{ y: -10, rotateX: 4, rotateY: 4, boxShadow: "0 28px 60px rgba(0,229,255,0.15)", borderColor: "rgba(0,229,255,0.45)" }}
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              <ARBrackets size={12} color="rgba(0,229,255,0.2)" />
-              <div className="tg-scan" aria-hidden="true" />
-              {/* Stars */}
-              <div className="tg-stars">
-                {[...Array(5)].map((_, si) => (
-                  <motion.svg key={si} width="13" height="13" viewBox="0 0 24 24" fill="#00e5ff"
-                    initial={{ scale: 0, rotate: -30, opacity: 0 }}
-                    animate={inView ? { scale: 1, rotate: 0, opacity: 1 } : {}}
-                    transition={{ delay: 0.3 + i * 0.12 + si * 0.06, type: "spring", stiffness: 300 }}
-                  >
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </motion.svg>
-                ))}
-              </div>
-              {/* Quote */}
-              <motion.p className="tg-quote"
-                initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.5 + i * 0.12 }}
-              >"{t.quote}"</motion.p>
-              {/* Result badge */}
-              <motion.div className="tg-result"
-                initial={{ opacity: 0, scale: 0.8, x: -10 }}
-                animate={inView ? { opacity: 1, scale: 1, x: 0 } : {}}
-                transition={{ delay: 0.65 + i * 0.12, type: "spring" }}
-              >
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                {t.result}
-              </motion.div>
-              {/* Author */}
-              <motion.div className="tg-author"
-                initial={{ opacity: 0, y: 10 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.75 + i * 0.12 }}
-              >
-                <div className="tg-avatar-wrap">
-                  <div className="tg-avatar">{t.initials}</div>
-                  <div className="tg-pulse-ring" />
-                </div>
-                <div>
-                  <div className="tg-name">{t.name}</div>
-                  <div className="tg-company">{t.company}</div>
-                </div>
-              </motion.div>
-            </motion.div>
+              className={i === index ? "dot active" : "dot"}
+              onClick={() => setIndex(i)}
+            />
           ))}
         </div>
       </div>
+
       <style jsx>{`
-        .tg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-        .tg-card {
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
-          border-radius: 20px; padding: 32px 28px;
-          display: flex; flex-direction: column; gap: 14px;
-          position: relative; overflow: hidden; cursor: default;
-          transition: border-color .3s;
+        .test-section {
+          padding: 100px 20px;
+          background: #04070d;
+          color: white;
+          text-align: center;
         }
-        .tg-scan {
-          position: absolute; left: 0; right: 0; height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(0,229,255,0.5), transparent);
-          top: -4px; opacity: 0; transition: opacity .3s;
-          animation: tgScanMove 4s linear infinite paused;
+
+        .container {
+          max-width: 900px;
+          margin: auto;
         }
-        .tg-card:hover .tg-scan { opacity: 1; animation-play-state: running; }
-        @keyframes tgScanMove { 0% { top: 0%; } 100% { top: 100%; } }
-        .tg-stars { display: flex; gap: 3px; }
-        .tg-quote { font-size: 13.5px; color: rgba(255,255,255,0.65); line-height: 1.8; font-style: italic; flex: 1; }
-        .tg-result {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-size: 11px; font-weight: 700; letter-spacing: .08em; color: #00e5ff;
-          background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.2);
-          border-radius: 50px; padding: 5px 12px; width: fit-content;
-          position: relative; overflow: hidden;
+
+        h2 {
+          font-size: 36px;
+          margin-bottom: 10px;
         }
-        .tg-result::after {
-          content: ''; position: absolute; inset: 0;
-          background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.25) 50%, transparent 100%);
-          transform: translateX(-100%); animation: shimmer 2.5s ease-in-out infinite;
+
+        .sub {
+          opacity: 0.6;
+          margin-bottom: 40px;
         }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .tg-author { display: flex; align-items: center; gap: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
-        .tg-avatar-wrap { position: relative; flex-shrink: 0; }
-        .tg-avatar {
-          width: 42px; height: 42px; border-radius: 50%;
-          background: rgba(0,229,255,0.1); border: 2px solid rgba(0,229,255,0.28);
-          display: flex; align-items: center; justify-content: center;
-          font-size: 12px; font-weight: 700; color: #00e5ff; position: relative; z-index: 1;
+
+        .slider {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        .tg-pulse-ring {
-          position: absolute; inset: -4px; border-radius: 50%;
-          border: 1px solid rgba(0,229,255,0.3);
-          animation: avatarPulse 2s ease-in-out infinite;
+
+        .slide-wrapper {
+          width: 100%;
+          overflow: hidden;
         }
-        @keyframes avatarPulse { 0%,100%{transform:scale(1);opacity:.4;} 50%{transform:scale(1.18);opacity:.9;} }
-        .tg-name { font-size: 13px; font-weight: 700; color: #fff; }
-        .tg-company { font-size: 11px; color: rgba(0,229,255,0.6); margin-top: 1px; }
-        @media (max-width: 960px) { .tg-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 600px) { .tg-grid { grid-template-columns: 1fr; } }
+
+        .card {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          padding: 40px;
+          backdrop-filter: blur(20px);
+        }
+
+        .quote {
+          font-size: 18px;
+          line-height: 1.6;
+          margin-bottom: 20px;
+        }
+
+        .result {
+          display: inline-block;
+          margin-bottom: 20px;
+          padding: 6px 14px;
+          border-radius: 20px;
+          background: rgba(0, 229, 255, 0.1);
+          color: #00e5ff;
+          font-size: 12px;
+        }
+
+        .author {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(0, 229, 255, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+
+        .name {
+          font-weight: 600;
+        }
+
+        .company {
+          font-size: 12px;
+          opacity: 0.6;
+        }
+
+        .nav {
+          position: absolute;
+          background: none;
+          border: none;
+          font-size: 30px;
+          color: #00e5ff;
+          cursor: pointer;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        .left {
+          left: -40px;
+        }
+
+        .right {
+          right: -40px;
+        }
+
+        .dots {
+          margin-top: 20px;
+        }
+
+        .dot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          margin: 0 4px;
+          background: gray;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        .dot.active {
+          background: #00e5ff;
+        }
+
+        @media (max-width: 600px) {
+          .nav {
+            display: none;
+          }
+        }
       `}</style>
     </section>
   );
@@ -773,228 +843,398 @@ function TestimonialsSection() {
 /* ─────────────────────────────────────────────
    CASE STUDIES
 ───────────────────────────────────────────── */
+
 const CASE_STUDIES = [
   {
     industry: "E-Commerce / Fashion",
     client: "UrbanVibe Co.",
     problem: "Low organic reach and stagnant sales despite paid ads spend.",
-    metrics: ["+340% Organic Reach", "3× Sales in 90 Days", "₹2.4L Ad Spend Saved"],
+    metrics: ["+340% Organic Reach", "3× Sales in 90 Days", "₹2.4L Saved"],
     tags: ["SEO", "Social Media", "Content"],
   },
   {
     industry: "Legal Services",
     client: "LegalEdge India",
-    problem: "Zero digital presence, relying entirely on word-of-mouth referrals.",
-    metrics: ["Page 1 Google — 12 Keywords", "+220% Website Traffic", "60+ Qualified Leads/Month"],
+    problem: "Zero digital presence, relying entirely on referrals.",
+    metrics: ["Page 1 Google — 12 Keywords", "+220% Traffic", "60+ Leads/Month"],
     tags: ["SEO", "Web Dev", "Google Ads"],
   },
   {
     industry: "Health & Wellness",
     client: "Bloom Lifestyle",
-    problem: "Inconsistent content strategy and low Instagram engagement.",
-    metrics: ["+40K Followers in 4 Months", "8.2% Avg Engagement Rate", "2× Revenue"],
+    problem: "Low engagement and inconsistent content.",
+    metrics: ["+40K Followers", "8.2% Engagement", "2× Revenue"],
     tags: ["Instagram", "Content", "Reels"],
   },
 ];
 
 function CaseStudiesSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-  const glitchedTitle = useGlitchText("Case Studies", inView);
+  const inView = useInView(ref, { once: true });
 
   return (
-    <section className="section case-section" ref={ref}>
-      <div className="section-inner">
-        <div className="section-heading-wrap">
-          <motion.h2 className="section-heading" initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
-            {glitchedTitle}
-          </motion.h2>
-          <motion.div className="cyan-underline" initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
-          <AnimatedText text="Real campaigns. Real numbers. Real impact." className="section-sub" delay={0.6} />
-        </div>
-        <div className="cs-grid">
+    <section className="case-section" ref={ref}>
+      <div className="container">
+
+        {/* 🔥 HEADING */}
+        <motion.h2
+          className="heading"
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+        >
+          Case Studies
+        </motion.h2>
+
+        <motion.p
+          className="sub"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.2 }}
+        >
+          Real campaigns. Real numbers. Real impact.
+        </motion.p>
+
+        {/* CASE BLOCKS */}
+        <div className="cases">
           {CASE_STUDIES.map((cs, i) => (
             <motion.div
-              key={i} className="cs-card"
-              initial={{ opacity: 0, y: 60, rotate: i % 2 === 0 ? -2 : 2 }}
-              animate={inView ? { opacity: 1, y: 0, rotate: 0 } : {}}
-              transition={{ duration: 0.7, delay: 0.2 + i * 0.15, ease: [0.23, 1, 0.32, 1] }}
-              whileHover={{ y: -10, rotate: 0, boxShadow: "0 28px 64px rgba(0,229,255,0.14)", borderColor: "rgba(0,229,255,0.4)" }}
+              key={i}
+              className="case"
+              initial={{ opacity: 0, y: 80 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.2 }}
             >
-              <ARBrackets size={14} color="rgba(0,229,255,0.25)" />
-              <div className="cs-glow-bar" />
-              <motion.div className="cs-industry"
-                initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.4 + i * 0.15 }}
-              >{cs.industry}</motion.div>
-              <motion.h3 className="cs-client"
-                initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.5 + i * 0.15 }}
-              >{cs.client}</motion.h3>
-              <motion.p className="cs-problem"
-                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.6 + i * 0.15 }}
-              >{cs.problem}</motion.p>
-              <div className="cs-metrics">
-                {cs.metrics.map((m, mi) => (
-                  <motion.div key={mi} className="cs-metric"
-                    initial={{ opacity: 0, x: -24 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ delay: 0.65 + i * 0.15 + mi * 0.08, ease: "easeOut" }}
-                  >
-                    <motion.span className="cs-check-icon"
-                      initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}}
-                      transition={{ delay: 0.7 + i * 0.15 + mi * 0.08, type: "spring", stiffness: 400 }}
-                    >
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    </motion.span>
-                    {m}
-                  </motion.div>
+              <span className="industry">{cs.industry}</span>
+
+              <h3>{cs.client}</h3>
+
+              <p className="problem">{cs.problem}</p>
+
+              <div className="metrics">
+                {cs.metrics.map((m, i) => (
+                  <div key={i} className="metric">✓ {m}</div>
                 ))}
               </div>
-              <div className="cs-tags">
-                {cs.tags.map((tag, ti) => (
-                  <motion.span key={ti} className="cs-tag"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={inView ? { scale: 1, opacity: 1 } : {}}
-                    transition={{ delay: 0.8 + i * 0.15 + ti * 0.06, type: "spring", stiffness: 350 }}
-                  >{tag}</motion.span>
+
+              <div className="tags">
+                {cs.tags.map((t, i) => (
+                  <span key={i}>{t}</span>
                 ))}
               </div>
-              <motion.div className="cs-coming"
-                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 1.0 + i * 0.15 }}
-              >Full Case Study — Coming Soon</motion.div>
             </motion.div>
           ))}
         </div>
       </div>
+
       <style jsx>{`
-        .case-section { background: #07090e; overflow: hidden; }
-        .cs-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; perspective: 1000px; }
-        .cs-card {
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
-          border-radius: 22px; padding: 36px 28px; position: relative;
-          display: flex; flex-direction: column; gap: 16px;
-          overflow: hidden; cursor: default; transition: border-color .3s;
+        .case-section {
+          padding: 120px 20px;
+          background: #05080f;
+          color: white;
         }
-        .cs-glow-bar {
-          position: absolute; top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg, transparent, #00e5ff, transparent);
-          opacity: 0; transition: opacity .4s;
-          animation: csGlowMove 3s linear infinite paused;
+
+        .container {
+          max-width: 800px;
+          margin: auto;
+          text-align: center;
         }
-        .cs-card:hover .cs-glow-bar { opacity: 1; animation-play-state: running; }
-        @keyframes csGlowMove { 0%{background-position:0%} 100%{background-position:200%} }
-        .cs-industry { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: rgba(0,229,255,0.55); font-family: monospace; }
-        .cs-client { font-size: 22px; font-weight: 800; color: #fff; margin: 0; }
-        .cs-problem { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.75; }
-        .cs-metrics { display: flex; flex-direction: column; gap: 9px; }
-        .cs-metric { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); }
-        .cs-check-icon { display: flex; flex-shrink: 0; }
-        .cs-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .cs-tag {
-          font-size: 10px; font-weight: 700; letter-spacing: .1em; padding: 4px 10px;
-          border-radius: 50px; background: rgba(0,229,255,0.07);
-          border: 1px solid rgba(0,229,255,0.2); color: #00e5ff;
-          transition: background .3s, box-shadow .3s;
+
+        .heading {
+          font-size: 44px;
+          font-weight: 800;
+          margin-bottom: 10px;
         }
-        .cs-tag:hover { background: rgba(0,229,255,0.15); box-shadow: 0 0 12px rgba(0,229,255,0.25); }
-        .cs-coming { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: .1em; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; font-family: monospace; }
-        @media (max-width: 960px) { .cs-grid { grid-template-columns: 1fr; } }
+
+        .sub {
+          opacity: 0.6;
+          margin-bottom: 70px;
+        }
+
+        .cases {
+          display: flex;
+          flex-direction: column;
+          gap: 60px;
+        }
+
+        .case {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 18px;
+          padding: 35px 25px;
+          transition: 0.3s;
+        }
+
+        .case:hover {
+          border-color: rgba(0,229,255,0.4);
+          transform: translateY(-5px);
+        }
+
+        .industry {
+          display: block;
+          font-size: 11px;
+          color: #00e5ff;
+          letter-spacing: 1px;
+          margin-bottom: 6px;
+        }
+
+        h3 {
+          font-size: 26px;
+          margin: 8px 0;
+        }
+
+        .problem {
+          font-size: 14px;
+          opacity: 0.6;
+          margin-bottom: 20px;
+        }
+
+        .metrics {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 15px;
+        }
+
+        .metric {
+          font-size: 14px;
+          color: #00e5ff;
+        }
+
+        .tags {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .tags span {
+          font-size: 11px;
+          padding: 5px 12px;
+          border-radius: 20px;
+          background: rgba(0,229,255,0.08);
+          border: 1px solid rgba(0,229,255,0.2);
+        }
       `}</style>
     </section>
   );
 }
-
 /* ─────────────────────────────────────────────
    BLOG / RESOURCES
 ───────────────────────────────────────────── */
 const BLOG_POSTS = [
-  { category: "AI Marketing",      title: "How AI is Replacing Manual Marketing Tasks in 2025",              excerpt: "From automated copywriting to predictive audience targeting — discover how forward-thinking brands are letting AI do the heavy lifting and scaling faster than ever.", readTime: "5 min read" },
-  { category: "Social Media",      title: "The Instagram Algorithm Decoded: What Actually Works in 2025",    excerpt: "We analysed 200+ accounts and 10,000+ posts to uncover the exact posting patterns, content types, and engagement triggers that drive explosive organic growth.",   readTime: "7 min read" },
-  { category: "Web & Automation",  title: "Why Your Website Is Losing You Customers (And How to Fix It)",   excerpt: "Page speed, mobile UX, and conversion architecture — the three pillars that separate high-converting websites from digital brochures nobody reads.",                readTime: "6 min read" },
+  {
+    category: "AI Marketing",
+    title: "How AI is Replacing Manual Marketing Tasks in 2025",
+    excerpt: "From automated copywriting to predictive audience targeting — discover how forward-thinking brands are scaling faster with AI.",
+    readTime: "5 min read",
+  },
+  {
+    category: "Social Media",
+    title: "The Instagram Algorithm Decoded: What Works in 2025",
+    excerpt: "We analysed 10,000+ posts to uncover patterns that drive real engagement and growth.",
+    readTime: "7 min read",
+  },
+  {
+    category: "Web & Automation",
+    title: "Why Your Website Is Losing Customers",
+    excerpt: "Page speed, UX, and conversion architecture — the real difference between high-performing websites.",
+    readTime: "6 min read",
+  },
 ];
 
 function BlogSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.1 });
-  const glitchedTitle = useGlitchText("Insights & Resources", inView);
+  const inView = useInView(ref, { once: true });
 
   return (
-    <section className="section blog-section" ref={ref}>
-      <div className="section-inner">
-        <div className="section-heading-wrap">
-          <motion.h2 className="section-heading" initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }}>
-            {glitchedTitle}
-          </motion.h2>
-          <motion.div className="cyan-underline" initial={{ scaleX: 0 }} animate={inView ? { scaleX: 1 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
-          <AnimatedText text="AI insights, growth strategies, and digital trends — published by our team." className="section-sub" delay={0.6} />
-        </div>
+    <section className="blog-section" ref={ref}>
+      <div className="blog-container">
+        <motion.h2
+          className="blog-heading"
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          Insights &amp; Resources
+        </motion.h2>
+
+        <motion.p
+          className="blog-sub"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          AI insights, growth strategies, and digital trends.
+        </motion.p>
+
         <div className="blog-grid">
           {BLOG_POSTS.map((post, i) => (
-            <motion.div key={i} className="blog-card"
-              initial={{ opacity: 0, y: 50, rotate: i === 1 ? 0 : i === 0 ? -1.5 : 1.5, scale: 0.96 }}
-              animate={inView ? { opacity: 1, y: 0, rotate: 0, scale: 1 } : {}}
-              transition={{ duration: 0.7, delay: 0.15 + i * 0.15, ease: [0.23, 1, 0.32, 1] }}
-              whileHover={{ y: -10, boxShadow: "0 28px 64px rgba(0,229,255,0.13)", borderColor: "rgba(0,229,255,0.4)" }}
+            <motion.div
+              key={i}
+              className="blog-card"
+              initial={{ opacity: 0, y: 80 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.2, duration: 0.6 }}
+              whileHover={{ scale: 1.03 }}
             >
-              <ARBrackets size={12} color="rgba(0,229,255,0.18)" />
+              <div className="blog-glow" />
+
               <div className="blog-top">
-                <motion.span className="blog-cat"
-                  animate={{ boxShadow: ["0 0 0px rgba(0,229,255,0)", "0 0 12px rgba(0,229,255,0.4)", "0 0 0px rgba(0,229,255,0)"] }}
-                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.8 }}
-                >{post.category}</motion.span>
+                <span className="blog-cat">{post.category}</span>
                 <span className="blog-time">{post.readTime}</span>
               </div>
-              <motion.h3 className="blog-title"
-                initial={{ opacity: 0, x: -10 }} animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.35 + i * 0.15 }}
-              >{post.title}</motion.h3>
-              <motion.p className="blog-excerpt"
-                initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.5 + i * 0.15 }}
-              >{post.excerpt}</motion.p>
-              <div className="blog-coming">
-                <span>Full Article — Coming Soon</span>
-                <motion.span className="blog-arrow"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </motion.span>
+
+              <h3 className="blog-title">{post.title}</h3>
+              <p className="blog-excerpt">{post.excerpt}</p>
+
+              <div className="blog-bottom">
+                <span>Coming Soon</span>
+                <span className="blog-arrow">→</span>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
       <style jsx>{`
-        .blog-section { background: #060a0f; }
-        .blog-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; perspective: 1000px; }
+        .blog-section {
+          padding: 100px 20px;
+          background: radial-gradient(circle at top, #0b0f1a, #02040a);
+          color: white;
+          overflow: hidden;
+        }
+
+        .blog-container {
+          max-width: 1200px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .blog-heading {
+          font-size: 42px;
+          font-weight: 800;
+          margin-bottom: 10px;
+        }
+
+        .blog-sub {
+          color: rgba(255, 255, 255, 0.6);
+          margin-bottom: 60px;
+        }
+
+        .blog-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
+        }
+
         .blog-card {
-          background: rgba(255,255,255,0.03); border: 1px solid rgba(0,229,255,0.1);
-          border-radius: 22px; padding: 32px 28px; position: relative;
-          display: flex; flex-direction: column; gap: 14px;
-          transition: border-color .3s; cursor: default; overflow: hidden;
+          position: relative;
+          padding: 30px;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          overflow: hidden;
+          transition: all 0.4s ease;
+          text-align: left;
         }
-        .blog-top { display: flex; justify-content: space-between; align-items: center; }
+
+        /* ✨ Animated Glow Border */
+        .blog-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 20px;
+          padding: 1px;
+          background: linear-gradient(120deg, #00e5ff, #7b61ff, #00e5ff);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: 0.4s;
+        }
+
+        .blog-card:hover::before {
+          opacity: 1;
+        }
+
+        /* Glow Light */
+        .blog-glow {
+          position: absolute;
+          width: 200px;
+          height: 200px;
+          background: radial-gradient(circle, rgba(0, 229, 255, 0.4), transparent);
+          top: -50px;
+          left: -50px;
+          filter: blur(60px);
+          opacity: 0;
+          transition: 0.5s;
+          pointer-events: none;
+        }
+
+        .blog-card:hover .blog-glow {
+          opacity: 1;
+        }
+
+        .blog-top {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 15px;
+        }
+
         .blog-cat {
-          font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
-          color: #00e5ff; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.22);
-          border-radius: 50px; padding: 4px 10px; transition: background .3s;
+          font-size: 11px;
+          color: #00e5ff;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          font-weight: 700;
         }
-        .blog-card:hover .blog-cat { background: rgba(0,229,255,0.16); }
-        .blog-time { font-size: 11px; color: rgba(255,255,255,0.3); font-family: monospace; }
-        .blog-title { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.4; margin: 0; transition: color .3s; }
-        .blog-card:hover .blog-title { color: #00e5ff; }
-        .blog-excerpt { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.8; flex: 1; }
-        .blog-coming {
-          display: flex; align-items: center; justify-content: space-between;
-          font-size: 12px; color: rgba(0,229,255,0.55); border-top: 1px solid rgba(255,255,255,0.06);
-          padding-top: 14px; font-weight: 600; letter-spacing: .05em;
+
+        .blog-time {
+          font-size: 12px;
+          opacity: 0.5;
         }
-        .blog-arrow { display: flex; color: rgba(0,229,255,0.55); }
-        @media (max-width: 960px) { .blog-grid { grid-template-columns: 1fr; } }
+
+        .blog-title {
+          font-size: 20px;
+          font-weight: 700;
+          margin-bottom: 10px;
+          line-height: 1.4;
+          color: #fff;
+        }
+
+        .blog-excerpt {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.6);
+          line-height: 1.6;
+        }
+
+        .blog-bottom {
+          margin-top: 20px;
+          display: flex;
+          justify-content: space-between;
+          font-size: 13px;
+          color: #00e5ff;
+          font-weight: 600;
+        }
+
+        .blog-arrow {
+          transition: transform 0.3s;
+          display: inline-block;
+        }
+
+        .blog-card:hover .blog-arrow {
+          transform: translateX(5px);
+        }
+
+        @media (max-width: 900px) {
+          .blog-grid {
+            grid-template-columns: 1fr;
+          }
+          .blog-heading { font-size: 32px; }
+        }
       `}</style>
     </section>
   );
