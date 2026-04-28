@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import BotDefenseGame from "./BotDefenseGame";
+
 import { Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { StaggerReveal, RevealItem, AnimatedText } from "./AnimationSystem";
 import Magnetic from "./Magnetic";
@@ -54,7 +54,7 @@ export default function GlobalFooter() {
           {/* Links */}
           <RevealItem>
             <div className="footer-col">
-              <h4 className="footer-col-heading">Protocols</h4>
+              <h4 className="footer-col-heading">Quick Links</h4>
               <ul className="footer-links">
                 <li><Link href="/" className="footer-link">Home</Link></li>
                 <li><Link href="/about" className="footer-link">About Us</Link></li>
@@ -67,7 +67,7 @@ export default function GlobalFooter() {
           {/* Contact */}
           <RevealItem>
             <div className="footer-col">
-              <h4 className="footer-col-heading">Transmission</h4>
+              <h4 className="footer-col-heading">Contact Us</h4>
               <ul className="footer-contact-list">
                 <li><Mail size={14} /><span>contactbotmate@gmail.com</span></li>
                 <li><Phone size={14} /><span>+91 97772 09527</span></li>
@@ -76,13 +76,13 @@ export default function GlobalFooter() {
             </div>
           </RevealItem>
 
-          {/* Interactive */}
+          {/* CTA */}
           <RevealItem>
-            <div className="footer-col interactive-col">
-              <h4 className="footer-col-heading">System Defense</h4>
-              <div className="game-wrapper">
-                <BotDefenseGame />
-              </div>
+            <div className="footer-col cta-col">
+              <h4 className="footer-col-heading">Work With Us</h4>
+              <p className="footer-cta-text">Ready to scale your brand with AI-powered marketing? Let's build something remarkable together.</p>
+              <a href="/get-started" className="footer-cta-btn">Get Started →</a>
+              <a href="/contact" className="footer-cta-link">Or book a free call</a>
             </div>
           </RevealItem>
 
@@ -113,7 +113,7 @@ export default function GlobalFooter() {
           margin: 0 auto;
           padding: 0 48px;
           display: grid;
-          grid-template-columns: 1.2fr 0.8fr 1fr 1.5fr;
+          grid-template-columns: 1.4fr 0.9fr 1.1fr 1.2fr;
           gap: 60px;
         }
 
@@ -214,12 +214,38 @@ export default function GlobalFooter() {
           color: rgba(255,255,255,0.45);
         }
 
-        /* GAME */
-        .game-wrapper {
-          border-radius: 16px;
-          overflow: hidden;
-          border: 1px solid rgba(0,229,255,0.1);
+        /* CTA COL */
+        .footer-cta-text {
+          font-size: 13px;
+          color: rgba(255,255,255,0.4);
+          line-height: 1.8;
+          margin-bottom: 22px;
         }
+        .footer-cta-btn {
+          display: inline-block;
+          background: #00e5ff;
+          color: #000;
+          font-size: 13px;
+          font-weight: 700;
+          padding: 10px 22px;
+          border-radius: 50px;
+          text-decoration: none;
+          margin-bottom: 12px;
+          transition: box-shadow .3s, transform .3s;
+          box-shadow: 0 0 16px rgba(0,229,255,0.3);
+        }
+        .footer-cta-btn:hover {
+          box-shadow: 0 0 28px rgba(0,229,255,0.6);
+          transform: translateY(-2px);
+        }
+        .footer-cta-link {
+          display: block;
+          font-size: 12px;
+          color: rgba(0,229,255,0.5);
+          text-decoration: none;
+          transition: color .3s;
+        }
+        .footer-cta-link:hover { color: #00e5ff; }
 
         /* BOTTOM */
         .footer-bottom {

@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 import CustomCursor from "@/components/CustomCursor";
 import WhatsAppPopup from "@/components/WhatsAppPopup";
 import ChatBotPopup from "@/components/ChatBotPopup";
+import BackToTop from "@/components/BackToTop";
 
 export default function RootLayout({
   children,
@@ -35,6 +36,7 @@ export default function RootLayout({
         {children}
         <ChatBotPopup />
         <WhatsAppPopup />
+        <BackToTop />
       </body>
     </html>
   );
